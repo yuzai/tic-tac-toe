@@ -1,4 +1,38 @@
 import React from 'react';
+var Remarkable = require('remarkable');
+
+class MarkdownEditor extends React.Component {
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.state = {
+            value: 'Type some *markdown* here!'
+        };
+    }
+
+    handleChange() {
+        this.setState({value: this.refs.textarea.value});
+    }
+
+    getRawMarkup() {
+        var md = new Remarkable();
+        return {
+            __html: md.render(this.state.value)
+        };
+    }
+
+    render() {
+        return (
+            <div className="MarkdownEditor">
+                <h3>Input</h3>
+                <textarea onChange={this.handleChange} ref="textarea" defaultValue={this.state.value}/>
+                <h3>Output</h3>
+                <div className="content" dangerouslySetInnerHTML={this.getRawMarkup()}/>
+            </div>
+        );
+    }
+}
+
 class Square extends React.Component {
     render() {
         return (
@@ -20,17 +54,17 @@ class Board extends React.Component {
     render() {
         return (
             <div>
-                <div className = 'board-row'>
+                <div className='board-row'>
                     {this.rendersquare(0)}
                     {this.rendersquare(1)}
                     {this.rendersquare(2)}
                 </div>
-                <div className = 'board-row'>
+                <div className='board-row'>
                     {this.rendersquare(3)}
                     {this.rendersquare(4)}
                     {this.rendersquare(5)}
                 </div>
-                <div className = 'board-row'>
+                <div className='board-row'>
                     {this.rendersquare(6)}
                     {this.rendersquare(7)}
                     {this.rendersquare(8)}
@@ -51,7 +85,7 @@ class Game extends React.Component {
                 }
             ],
             stepNumber: 0,
-            xIsnext: true,
+            xIsnext: true
         };
     }
     handleClick(i) {
@@ -59,8 +93,7 @@ class Game extends React.Component {
         const current = history[this.state.stepNumber];
         const squares = current.squares.slice();
         const clicked = i;
-        if (calculateWinner(squares) || squares[i])
-        {
+        if (calculateWinner(squares) || squares[i]) {
             return;
         }
         squares[i] = this.state.xIsnext
@@ -100,10 +133,9 @@ class Game extends React.Component {
         }
         const moves = history.map((state, move) => {
             const desc = move
-                ? ((move%2
+                ? ((move % 2
                     ? 'X'
-                    : 'O')+
-                    ' move at' + '('+(Math.floor((state.clicked)/3)+1)+','+((state.clicked)%3+1)+')')
+                    : 'O') + ' move at' + '(' + (Math.floor((state.clicked) / 3) + 1) + ',' + ((state.clicked) % 3 + 1) + ')')
                 : 'Game start';
             return (
                 <li key={move}>
@@ -114,12 +146,13 @@ class Game extends React.Component {
         return (
             <div className='game'>
                 <div className='game-board'>
-                    <div className = 'status'>{status}</div>
+                    <div className='status'>{status}</div>
                     <Board squares={squares} onClick= {(i)=>this.handleClick(i)}/>
                 </div>
                 <div className='game-info'>
                     <ol>{moves}</ol>
                 </div>
+                <MarkdownEditor/>
             </div>
         );
 

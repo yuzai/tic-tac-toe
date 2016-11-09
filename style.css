@@ -35,7 +35,15 @@ ol,ul{
 .game {
   display: flex;
   flex-direction: row;
+  justify-content:space-around;
 }
 .game-info {
   margin-left: 20px;
+}
+@media screen and (max-width: 768px){
+  .game {
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-start;
+  }
 }
